@@ -1,23 +1,28 @@
-import logo from './logo.svg';
 import './App.css';
+import React, {useState} from 'react';
+import ContactList from './components/ContactList';
 
 function App() {
+  const [contacts, updateContacts] = useState([]);
+
+  fetch('https://randomuser.me/api?results=25')
+    .then((response)=> response.json())
+    .then((data)=> {
+      if(!contacts.length){
+        updateContacts(data.results)
+      }
+    })
+
+    console.log("contacts", contacts);
+    
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {
+        contacts.map((contact, index)=>(
+          <ContactList key={index} first={contact.name.first} last={contact.name.last} picture={contact.picture.medium} phone={contact.phone} city={contact.location.city} country={contact.location.country}/>
+        ))
+      }
     </div>
   );
 }
